@@ -1,5 +1,8 @@
 package Utilities;
 
+import Message.Class;
+import Message.Type;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -11,6 +14,13 @@ import java.nio.charset.StandardCharsets;
  */
 public class ParserUtility {
 
+    /**
+     * This is a helper method that parses a ByteBuffer to get the name in a
+     * query
+     *
+     * @param name the name to append this name to
+     * @param data the ByteBuffer to pull the bytes from
+     */
     public static String parseName(String name, ByteBuffer data) {
         int currentLength = data.get();
         while(currentLength != 0) {
@@ -22,5 +32,31 @@ public class ParserUtility {
             currentLength = data.get();
         }
         return name;
+    }
+
+    /**
+     * This method parses the ByteBuffer into an integer that the Type class
+     * can parse
+     *
+     * @param data the ByteBuffer to parse
+     */
+    public static Type parseType(ByteBuffer data) {
+        return Type.parseType((data.get() << 8) | data.get());
+    }
+
+    /**
+     * This method parses the ByteBuffer to get an integer that can be
+     * compared to find the class
+     *
+     * @param data the ByteBuffer to parse
+     */
+    public static Class parseClass(ByteBuffer data) {
+        Class dnsClass;
+        if(((data.get() << 8) | data.get()) == 1) {
+            dnsClass = Class.IN;
+        } else {
+            dnsClass = Class.CH;
+        }
+        return dnsClass;
     }
 }

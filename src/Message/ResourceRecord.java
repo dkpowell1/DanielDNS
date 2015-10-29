@@ -1,9 +1,7 @@
 package Message;
 
 import Utilities.ParserUtility;
-
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -61,10 +59,25 @@ public class ResourceRecord {
         this.resourceDataLength = resourceDataLength;
     }
 
+    /**
+     * This method creates a new Resource Record using the bytes in a ByteBuffer
+     * @param data the ByteBuffer to pull the data from
+     */
     public ResourceRecord(ByteBuffer data) {
         parseName(data);
+        this.type = ParserUtility.parseType(data);
+        this.dnsClass = ParserUtility.parseClass(data);
+        parseTTL(data);
+        parseData(data);
     }
 
+    /**
+     * This method parses the bytes for the name of the resource record and
+     * determines whether or not the byte represents a pointer, or a string
+     * and then calls the utility method for parsing the name
+     *
+     * @param data the ByteBuffer with the bytes for the name
+     */
     private void parseName(ByteBuffer data) {
         this.name = "";
         int currentLength = ((data.get() & 0xff) << 8) | (data.get() & 0xff);
@@ -77,15 +90,21 @@ public class ResourceRecord {
                 this.name = ParserUtility.parseName(this.name, data);
                 data.position(oldPos);
             } else {
-
-                byte[] bytes = new byte[currentLength];
-                for (int i = 0; i < currentLength; i++) {
-                    bytes[i] = data.get();
-                }
-                this.name = this.name + new String(bytes, StandardCharsets.UTF_8);
-
+                this.name = ParserUtility.parseName(this.name, data);
             }
             currentLength = data.get();
+        }
+    }
+
+    private void parseTTL(ByteBuffer data) {
+        this.ttl = ((data.get() << 31) | (data.get() << 23) | (data.get() << 15)
+                | (data.get() << 7));
+    }
+
+    private void parseData(ByteBuffer data) {
+        this.resourceDataLength = (data.get() << 8 | data.get()) & 0xFF;
+        for(int i = 0; i < resourceDataLength; i++) {
+            this.resourceData.add(data.get());
         }
     }
 }

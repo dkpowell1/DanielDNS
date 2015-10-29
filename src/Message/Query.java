@@ -40,10 +40,9 @@ public class Query {
      * @param data the ByteBuffer to parse through
      */
     public Query(ByteBuffer data) {
-        this.name = "";
-        parseName(data);
-        parseType(data);
-        parseClass(data);
+        this.name = ParserUtility.parseName("",data);
+        this.type = ParserUtility.parseType(data);
+        this.dnsClass = ParserUtility.parseClass(data);
     }
 
     /**
@@ -97,35 +96,4 @@ public class Query {
         return outputStream.toByteArray();
     }
 
-    /**
-     * This is a helper method that parses a ByteBuffer to get the name in a
-     * query
-     *
-     * @param data the ByteBuffer to pull the bytes from
-     */
-    private void parseName(ByteBuffer data) {
-        this.name = ParserUtility.parseName(this.name, data);
-    }
-
-    /**
-     * This method parses the ByteBuffer into an integer that the Type class
-     * can parse
-     *
-     * @param data the ByteBuffer to parse
-     */
-    private void parseType(ByteBuffer data) {
-        this.type = Type.parseType((data.get() << 8) | data.get());
-    }
-
-    /**
-     * This method parses the ByteBuffer to get an integer that can be
-     * compared to find the class
-     *
-     * @param data the ByteBuffer to parse
-     */
-    private void parseClass(ByteBuffer data) {
-        if(((data.get() << 8) | data.get()) == 1) {
-            this.dnsClass = Class.IN;
-        }
-    }
 }

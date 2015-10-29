@@ -19,13 +19,13 @@ public enum Type {
      */
     public static Type parseType(String type) {
         Type returnType = A;
-        if(type.toLowerCase() == "cname") {
+        if(type.toLowerCase().equals("cname")) {
             returnType = CNAME;
         }
-        else if(type.toLowerCase() == "mx") {
+        else if(type.toLowerCase().equals("mx")) {
             returnType = MX;
         }
-        else if(type.toLowerCase() == "ptr") {
+        else if(type.toLowerCase().equals("ptr")) {
             returnType = PTR;
         }
         return returnType;
