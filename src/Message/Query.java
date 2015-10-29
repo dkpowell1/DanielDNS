@@ -1,9 +1,9 @@
 package Message;
 
+import Utilities.ParserUtility;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 /**
  * This is the data for the query that is sent to the DNS server
@@ -40,6 +40,7 @@ public class Query {
      * @param data the ByteBuffer to parse through
      */
     public Query(ByteBuffer data) {
+        this.name = "";
         parseName(data);
         parseType(data);
         parseClass(data);
@@ -103,16 +104,7 @@ public class Query {
      * @param data the ByteBuffer to pull the bytes from
      */
     private void parseName(ByteBuffer data) {
-        this.name = "";
-        int currentLength = data.get();
-        while(currentLength != 0) {
-            byte[] bytes = new byte[currentLength];
-            for (int i = 0; i < currentLength; i++) {
-                bytes[i] = data.get();
-            }
-            this.name = this.name + new String(bytes, StandardCharsets.UTF_8);
-            currentLength = data.get();
-        }
+        this.name = ParserUtility.parseName(this.name, data);
     }
 
     /**
