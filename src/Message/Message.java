@@ -112,4 +112,31 @@ public class Message {
         }
         return byteBuffer;
     }
+
+    /**
+     * This method returns a readable string with the values of the Message
+     *
+     * @return the readable String
+     */
+    public String toString() {
+        String message = "Header: \n";
+        message += this.header.toString();
+        message += "Queries: \n";
+        for(int i = 0; i < header.getTotalQuestions();i++) {
+            message += this.questions.get(i).toString();
+        }
+        message += "Answers: \n";
+        for(int i = 0; i < header.getTotalAnswerResourceRecords();i++) {
+            message += this.answerResourceRecords.get(i).toString();
+        }
+        message += "Authority: \n";
+        for(int i = 0; i < header.getTotalAuthorityResourceRecords();i++) {
+            message += this.authorityResourceRecords.get(i).toString();
+        }
+        message += "Additional: \n";
+        for(int i = 0; i < header.getTotalAdditionalResourceRecords();i++) {
+            message += this.additionalResourceRecords.get(i).toString();
+        }
+        return message;
+    }
 }

@@ -25,14 +25,31 @@ public class ParserUtility {
      */
     public static String parseName(String name, ByteBuffer data) {
         int currentLength = data.get();
-        while(currentLength != 0) {
-            byte[] bytes = new byte[currentLength];
-            for (int i = 0; i < currentLength; i++) {
-                bytes[i] = data.get();
+        while (currentLength != 0) {
+            if (((currentLength >> 15) & 0x1) == 1 && (((currentLength >> 14) & 0x1)
+                    == 1)) {
+                int newPosition = ((currentLength << 8) & 0x3F | data.get() &
+                        0xFF);
+                int oldPos = data.position();
+                data.position(newPosition);
+                name = parseName(name, data);
+                data.position(oldPos);
+                currentLength = 0;
+            } else {
+                name = nameParseLength(name, data,currentLength);
+                currentLength = data.get();
             }
-            name = name + new String(bytes, StandardCharsets.UTF_8) + ".";
-            currentLength = data.get();
         }
+        return name;
+    }
+
+    private static String nameParseLength(String name, ByteBuffer data,int
+            currentLength) {
+        byte[] bytes = new byte[currentLength];
+        for (int i = 0; i < currentLength; i++) {
+            bytes[i] = data.get();
+        }
+        name = name + new String(bytes, StandardCharsets.UTF_8) + ".";
         return name;
     }
 
@@ -54,7 +71,7 @@ public class ParserUtility {
      */
     public static Class parseClass(ByteBuffer data) {
         Class dnsClass;
-        if(((data.get() << 8) | data.get()) == 1) {
+        if (((data.get() << 8) | data.get()) == 1) {
             dnsClass = Class.IN;
         } else {
             dnsClass = Class.CH;
@@ -62,44 +79,72 @@ public class ParserUtility {
         return dnsClass;
     }
 
-    public static String parseAData(ByteBuffer data, int length) {
-        byte[] aData = {data.get(),data.get(),data.get(),data.get()};
+    /**
+     * This method takes in the ByteBuffer containing data to parse, the
+     * length of the data and then returns a String with the values contained
+     *
+     * @param data   the ByteBuffer containing the data
+     * @param length the length of the data
+     * @return the String representation of the data
+     */
+    public static String parseAData(ByteBuffer data, long length) {
+        byte[] aData = {data.get(), data.get(), data.get(), data.get()};
         String address;
         try {
-            address = InetAddress.getByAddress(aData).toString();
+            address = InetAddress.getByAddress(aData).getHostAddress();
         } catch (UnknownHostException ignore) {
             address = "Unkonwn Host";
         }
         return address;
     }
 
-    public static String parseCnameData(ByteBuffer data, int length) {
-        return parseDomainNames(data,length);
+    /**
+     * This method takes in the ByteBuffer containing data to parse, the
+     * length of the data and then returns a String with the values contained
+     *
+     * @param data   the ByteBuffer containing the data
+     * @param length the length of the data
+     * @return the String representation of the data
+     */
+    public static String parseCnameData(ByteBuffer data, long length) {
+        return parseName("",data);
     }
 
-    public static String parsePtrData(ByteBuffer data, int length) {
-        return parseDomainNames(data,length);
+    /**
+     * This method takes in the ByteBuffer containing data to parse, the
+     * length of the data and then returns a String with the values contained
+     *
+     * @param data   the ByteBuffer containing the data
+     * @param length the length of the data
+     * @return the String representation of the data
+     */
+    public static String parsePtrData(ByteBuffer data, long length) {
+        return parseName("",data);
     }
 
-    public static String parseMxData(ByteBuffer data, int length) {
+    /**
+     * This method takes in the ByteBuffer containing data to parse, the
+     * length of the data and then returns a String with the values contained
+     *
+     * @param data   the ByteBuffer containing the data
+     * @param length the length of the data
+     * @return the String representation of the data
+     */
+    public static String parseMxData(ByteBuffer data, long length) {
         int preference = ((data.get() << 8) | data.get());
-        return preference + " " + parseDomainNames(data, length);
+        return preference + " " + parseName("", data);
     }
 
-    public static String parseNsData(ByteBuffer data, int length) {
-        return parseDomainNames(data,length);
+    /**
+     * This method takes in the ByteBuffer containing data to parse, the
+     * length of the data and then returns a String with the values contained
+     *
+     * @param data   the ByteBuffer containing the data
+     * @param length the length of the data
+     * @return the String representation of the data
+     */
+    public static String parseNsData(ByteBuffer data, long length) {
+        return parseName("",data);
     }
 
-    public static String parseDomainNames(ByteBuffer data, int length) {
-        String name = "";
-        while(length != 0) {
-            byte[] bytes = new byte[length];
-            for (int i = 0; i < length; i++) {
-                bytes[i] = data.get();
-            }
-            name = name + new String(bytes, StandardCharsets.UTF_8) + ".";
-            length = data.get();
-        }
-        return name;
-    }
 }

@@ -56,6 +56,7 @@ public class DNSLookup {
             this.datagramSocket.receive(datagramPacket);
             Message response = new Message(ByteBuffer.wrap(datagramPacket
                     .getData()));
+            System.out.println(response.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

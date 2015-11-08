@@ -96,4 +96,14 @@ public class Query {
         return outputStream.toByteArray();
     }
 
+    /**
+     * This method returns the readable String containing the values of this
+     * class
+     *
+     * @return the readable String
+     */
+    public String toString() {
+        return " Name: " + this.name + "\n Class: " + this.dnsClass + "\n " +
+                "Type: "+ this.type + "\n";
+    }
 }

@@ -2,7 +2,6 @@ package Message;
 
 import Utilities.ParserUtility;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 /**
  * This is the portion of the message where the data resides
@@ -29,12 +28,12 @@ public class ResourceRecord {
     /**
      * This is the how long the record should be kept in the cache of the resource record
      */
-    private int ttl;
+    private long ttl;
 
     /**
      * This is the length of the resource data
      */
-    private int resourceDataLength;
+    private long resourceDataLength;
 
     /**
      * This is the resource data
@@ -80,30 +79,25 @@ public class ResourceRecord {
      * @param data the ByteBuffer with the bytes for the name
      */
     private void parseName(ByteBuffer data) {
-        this.name = "";
-        int currentLength = ((data.get() & 0xff) << 8) | (data.get() & 0xff);
-        while (currentLength != 0) {
-            if (((currentLength >> 15) & 0x1) == 1 && (((currentLength >> 14) & 0x1)
-                    == 1)) {
-
-                int oldPos = data.position();
-                data.position(currentLength & 0x3FFF);
-                this.name = ParserUtility.parseName(this.name, data);
-                data.position(oldPos);
-                currentLength = 0;
-            } else {
-                this.name = ParserUtility.parseName(this.name, data);
-            }
-        }
+        this.name = ParserUtility.parseName("",data);
     }
 
+    /**
+     * This method parses the Time To Live for the Resource Record
+     * @param data  the ByteBuffer containing the data to parse
+     */
     private void parseTTL(ByteBuffer data) {
         this.ttl = ((data.get() << 31) | (data.get() << 23) | (data.get() << 15)
                 | (data.get() << 7));
     }
 
+    /**
+     * This method parses out the data associated with the resource records
+     *
+     * @param data the ByteBuffer containing the data to parse
+     */
     private void parseData(ByteBuffer data) {
-        this.resourceDataLength = (data.get() << 8 | data.get()) & 0xFF;
+        this.resourceDataLength = (data.get() << 8 | data.get()) & 0xFFFF;
         switch(this.type) {
             case A:
                 this.resourceData = ParserUtility.parseAData(data,
@@ -124,9 +118,14 @@ public class ResourceRecord {
         }
     }
 
+    /**
+     * This method returns the string representation of the Resource Record
+     * in a way that is easy to read
+     * @return the formatted string
+     */
     public String toString() {
-        return "Name: " + this.name + "\n Type: " + this.type +
+        return " Name: " + this.name + "\n Type: " + this.type +
                 "\n Class: " + this.dnsClass + "\n TTL: " + this.ttl +
-                "\n " + "Resource Data: " + this.resourceData;
+                "\n " + "Resource Data: " + this.resourceData + "\n";
     }
 }
