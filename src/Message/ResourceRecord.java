@@ -39,7 +39,7 @@ public class ResourceRecord {
     /**
      * This is the resource data
      */
-    private ArrayList<Byte> resourceData;
+    private String resourceData;
 
 
     /**
@@ -57,6 +57,7 @@ public class ResourceRecord {
         this.dnsClass = dnsClass;
         this.ttl = ttl;
         this.resourceDataLength = resourceDataLength;
+        this.resourceData = "";
     }
 
     /**
@@ -81,18 +82,18 @@ public class ResourceRecord {
     private void parseName(ByteBuffer data) {
         this.name = "";
         int currentLength = ((data.get() & 0xff) << 8) | (data.get() & 0xff);
-
         while (currentLength != 0) {
             if (((currentLength >> 15) & 0x1) == 1 && (((currentLength >> 14) & 0x1)
                     == 1)) {
+
                 int oldPos = data.position();
                 data.position(currentLength & 0x3FFF);
                 this.name = ParserUtility.parseName(this.name, data);
                 data.position(oldPos);
+                currentLength = 0;
             } else {
                 this.name = ParserUtility.parseName(this.name, data);
             }
-            currentLength = data.get();
         }
     }
 
@@ -103,8 +104,29 @@ public class ResourceRecord {
 
     private void parseData(ByteBuffer data) {
         this.resourceDataLength = (data.get() << 8 | data.get()) & 0xFF;
-        for(int i = 0; i < resourceDataLength; i++) {
-            this.resourceData.add(data.get());
+        switch(this.type) {
+            case A:
+                this.resourceData = ParserUtility.parseAData(data,
+                        resourceDataLength);
+                break;
+            case NS:
+                this.resourceData = ParserUtility.parseNsData(data,resourceDataLength);
+                break;
+            case PTR:
+                this.resourceData = ParserUtility.parsePtrData(data,resourceDataLength);
+                break;
+            case MX:
+                this.resourceData = ParserUtility.parseMxData(data,resourceDataLength);
+                break;
+            case CNAME:
+                this.resourceData = ParserUtility.parseCnameData(data,resourceDataLength);
+                break;
         }
+    }
+
+    public String toString() {
+        return "Name: " + this.name + "\n Type: " + this.type +
+                "\n Class: " + this.dnsClass + "\n TTL: " + this.ttl +
+                "\n " + "Resource Data: " + this.resourceData;
     }
 }

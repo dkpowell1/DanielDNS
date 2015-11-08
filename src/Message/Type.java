@@ -10,7 +10,8 @@ public enum Type {
     A,
     CNAME,
     MX,
-    PTR;
+    PTR,
+    NS;
 
     /**
      * This method parses the string for the type and returns a Type
@@ -27,6 +28,9 @@ public enum Type {
         }
         else if(type.toLowerCase().equals("ptr")) {
             returnType = PTR;
+        }
+        else if(type.toLowerCase().equals("ns")) {
+            returnType = NS;
         }
         return returnType;
     }
@@ -52,6 +56,9 @@ public enum Type {
                 break;
             case 12:
                 type = PTR;
+                break;
+            case 2:
+                type = NS;
                 break;
         }
         return type;

@@ -3,6 +3,8 @@ package Utilities;
 import Message.Class;
 import Message.Type;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -58,5 +60,46 @@ public class ParserUtility {
             dnsClass = Class.CH;
         }
         return dnsClass;
+    }
+
+    public static String parseAData(ByteBuffer data, int length) {
+        byte[] aData = {data.get(),data.get(),data.get(),data.get()};
+        String address;
+        try {
+            address = InetAddress.getByAddress(aData).toString();
+        } catch (UnknownHostException ignore) {
+            address = "Unkonwn Host";
+        }
+        return address;
+    }
+
+    public static String parseCnameData(ByteBuffer data, int length) {
+        return parseDomainNames(data,length);
+    }
+
+    public static String parsePtrData(ByteBuffer data, int length) {
+        return parseDomainNames(data,length);
+    }
+
+    public static String parseMxData(ByteBuffer data, int length) {
+        int preference = ((data.get() << 8) | data.get());
+        return preference + " " + parseDomainNames(data, length);
+    }
+
+    public static String parseNsData(ByteBuffer data, int length) {
+        return parseDomainNames(data,length);
+    }
+
+    public static String parseDomainNames(ByteBuffer data, int length) {
+        String name = "";
+        while(length != 0) {
+            byte[] bytes = new byte[length];
+            for (int i = 0; i < length; i++) {
+                bytes[i] = data.get();
+            }
+            name = name + new String(bytes, StandardCharsets.UTF_8) + ".";
+            length = data.get();
+        }
+        return name;
     }
 }
