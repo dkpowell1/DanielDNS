@@ -8,6 +8,11 @@ import java.net.UnknownHostException;
  * @version 1.0
  */
 public class DanielDNSDriver {
+    /**
+     * This method takes in User input to try and resolve a DNS query
+     * @param args this takes in the IP for the DNS Server, the lookup name
+     *             or domain name to resolve, and the type of DNS query to send
+     */
     public static void main(String[] args) {
         if(args.length < 3) {
             System.out.println("usage: DanielDNSDriver <dnsIP> <lookupName> <lookupType>");

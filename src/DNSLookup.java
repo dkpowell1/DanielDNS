@@ -42,9 +42,8 @@ public class DNSLookup {
     }
 
     /**
-     * This method sends a datagram to the specified DNS Server
-     *
-     * TODO fix all this bad code!!!
+     * This method sends a datagram to the specified DNS Server and then
+     * Parses and prints the response to the user
      */
     public void queryDNS() {
         Message message = new Message(hostname,messageType,false);

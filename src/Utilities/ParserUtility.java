@@ -43,6 +43,13 @@ public class ParserUtility {
         return name;
     }
 
+    /**
+     * This method parses bytes from a byteBuffer for a specified length
+     * @param name the name to append to
+     * @param data the ByteBuffer to parse from
+     * @param currentLength the number of bytes to parse out
+     * @return the String from the bytes read in
+     */
     private static String nameParseLength(String name, ByteBuffer data,int
             currentLength) {
         byte[] bytes = new byte[currentLength];
