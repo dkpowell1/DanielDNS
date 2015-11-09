@@ -1,8 +1,10 @@
+package DNS;
+
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
 /**
- * TODO Descriptions
+ * This class runs the DNSLookup
  *
  * @author Daniel Powell
  * @version 1.0
@@ -15,7 +17,7 @@ public class DanielDNSDriver {
      */
     public static void main(String[] args) {
         if(args.length < 3) {
-            System.out.println("usage: DanielDNSDriver <dnsIP> <lookupName> <lookupType>");
+            System.out.println("usage: DNS.DanielDNSDriver <dnsIP> <lookupName> <lookupType>");
         } else {
             try {
                 DNSLookup dnsLookup = new DNSLookup(args[0],args[1],args[2]);

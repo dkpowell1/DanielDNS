@@ -1,6 +1,6 @@
-import Message.Message;
+package DNS;
 
-import javax.xml.crypto.Data;
+import Message.Message;
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;

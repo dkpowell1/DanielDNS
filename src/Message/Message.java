@@ -120,22 +120,28 @@ public class Message {
      */
     public String toString() {
         String message = "Header: \n";
+        String lines = "-------------------------------------------\n";
         message += this.header.toString();
+        message += lines;
         message += "Queries: \n";
         for(int i = 0; i < header.getTotalQuestions();i++) {
             message += this.questions.get(i).toString();
+            message += lines;
         }
         message += "Answers: \n";
         for(int i = 0; i < header.getTotalAnswerResourceRecords();i++) {
             message += this.answerResourceRecords.get(i).toString();
+            message += lines;
         }
         message += "Authority: \n";
         for(int i = 0; i < header.getTotalAuthorityResourceRecords();i++) {
             message += this.authorityResourceRecords.get(i).toString();
+            message += lines;
         }
         message += "Additional: \n";
         for(int i = 0; i < header.getTotalAdditionalResourceRecords();i++) {
             message += this.additionalResourceRecords.get(i).toString();
+            message += lines;
         }
         return message;
     }

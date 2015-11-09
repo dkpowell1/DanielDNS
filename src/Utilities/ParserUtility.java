@@ -56,7 +56,7 @@ public class ParserUtility {
         for (int i = 0; i < currentLength; i++) {
             bytes[i] = data.get();
         }
-        name = name + new String(bytes, StandardCharsets.UTF_8) + ".";
+        name = name + new String(bytes, StandardCharsets.US_ASCII) + ".";
         return name;
     }
 
@@ -91,10 +91,9 @@ public class ParserUtility {
      * length of the data and then returns a String with the values contained
      *
      * @param data   the ByteBuffer containing the data
-     * @param length the length of the data
      * @return the String representation of the data
      */
-    public static String parseAData(ByteBuffer data, long length) {
+    public static String parseAData(ByteBuffer data) {
         byte[] aData = {data.get(), data.get(), data.get(), data.get()};
         String address;
         try {
@@ -110,10 +109,9 @@ public class ParserUtility {
      * length of the data and then returns a String with the values contained
      *
      * @param data   the ByteBuffer containing the data
-     * @param length the length of the data
      * @return the String representation of the data
      */
-    public static String parseCnameData(ByteBuffer data, long length) {
+    public static String parseCnameData(ByteBuffer data) {
         return parseName("",data);
     }
 
@@ -122,10 +120,9 @@ public class ParserUtility {
      * length of the data and then returns a String with the values contained
      *
      * @param data   the ByteBuffer containing the data
-     * @param length the length of the data
      * @return the String representation of the data
      */
-    public static String parsePtrData(ByteBuffer data, long length) {
+    public static String parsePtrData(ByteBuffer data) {
         return parseName("",data);
     }
 
@@ -134,10 +131,9 @@ public class ParserUtility {
      * length of the data and then returns a String with the values contained
      *
      * @param data   the ByteBuffer containing the data
-     * @param length the length of the data
      * @return the String representation of the data
      */
-    public static String parseMxData(ByteBuffer data, long length) {
+    public static String parseMxData(ByteBuffer data) {
         int preference = ((data.get() << 8) | data.get());
         return preference + " " + parseName("", data);
     }
@@ -147,10 +143,9 @@ public class ParserUtility {
      * length of the data and then returns a String with the values contained
      *
      * @param data   the ByteBuffer containing the data
-     * @param length the length of the data
      * @return the String representation of the data
      */
-    public static String parseNsData(ByteBuffer data, long length) {
+    public static String parseNsData(ByteBuffer data) {
         return parseName("",data);
     }
 

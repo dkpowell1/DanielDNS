@@ -100,20 +100,19 @@ public class ResourceRecord {
         this.resourceDataLength = (data.get() << 8 | data.get()) & 0xFFFF;
         switch(this.type) {
             case A:
-                this.resourceData = ParserUtility.parseAData(data,
-                        resourceDataLength);
+                this.resourceData = ParserUtility.parseAData(data);
                 break;
             case NS:
-                this.resourceData = ParserUtility.parseNsData(data,resourceDataLength);
+                this.resourceData = ParserUtility.parseNsData(data);
                 break;
             case PTR:
-                this.resourceData = ParserUtility.parsePtrData(data,resourceDataLength);
+                this.resourceData = ParserUtility.parsePtrData(data);
                 break;
             case MX:
-                this.resourceData = ParserUtility.parseMxData(data,resourceDataLength);
+                this.resourceData = ParserUtility.parseMxData(data);
                 break;
             case CNAME:
-                this.resourceData = ParserUtility.parseCnameData(data,resourceDataLength);
+                this.resourceData = ParserUtility.parseCnameData(data);
                 break;
         }
     }
