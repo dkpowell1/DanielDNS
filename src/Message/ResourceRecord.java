@@ -31,11 +31,6 @@ public class ResourceRecord {
     private long ttl;
 
     /**
-     * This is the length of the resource data
-     */
-    private long resourceDataLength;
-
-    /**
      * This is the resource data
      */
     private String resourceData;
@@ -55,7 +50,6 @@ public class ResourceRecord {
         this.type = type;
         this.dnsClass = dnsClass;
         this.ttl = ttl;
-        this.resourceDataLength = resourceDataLength;
         this.resourceData = "";
     }
 
@@ -97,7 +91,6 @@ public class ResourceRecord {
      * @param data the ByteBuffer containing the data to parse
      */
     private void parseData(ByteBuffer data) {
-        this.resourceDataLength = (data.get() << 8 | data.get()) & 0xFFFF;
         switch(this.type) {
             case A:
                 this.resourceData = ParserUtility.parseAData(data);
