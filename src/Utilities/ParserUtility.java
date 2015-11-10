@@ -52,11 +52,20 @@ public class ParserUtility {
      */
     private static String nameParseLength(String name, ByteBuffer data,int
             currentLength) {
+        boolean firstTime = true;
         byte[] bytes = new byte[currentLength];
         for (int i = 0; i < currentLength; i++) {
-            bytes[i] = data.get();
+            byte dataReceived = data.get();
+            if(dataReceived >= 33) {
+                bytes[i] = dataReceived;
+            } else {
+                if(!firstTime) {
+                    bytes[i] = 46;
+                }
+            }
+            firstTime = false;
         }
-        name = name + new String(bytes, StandardCharsets.US_ASCII) + ".";
+        name = name + new String(bytes) + ".";
         return name;
     }
 
