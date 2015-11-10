@@ -195,7 +195,7 @@ public class Header {
      * @param data the ByteBuffer with the bytes for the ID
      */
     private void parseID(ByteBuffer data) {
-        this.id = ((data.get() << 8) | data.get());
+        this.id = ((data.get() << 8) | data.get()) & 0xffff;
     }
 
     /**

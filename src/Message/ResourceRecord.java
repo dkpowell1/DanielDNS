@@ -31,6 +31,11 @@ public class ResourceRecord {
     private long ttl;
 
     /**
+     * This is the length of the Rdata
+     */
+    private long length;
+
+    /**
      * This is the resource data
      */
     private String resourceData;
@@ -82,7 +87,7 @@ public class ResourceRecord {
      */
     private void parseTTL(ByteBuffer data) {
         this.ttl = ((data.get() << 31) | (data.get() << 23) | (data.get() << 15)
-                | (data.get() << 7));
+                | (data.get() << 7)) & 0xffffffff;
     }
 
     /**
@@ -91,6 +96,8 @@ public class ResourceRecord {
      * @param data the ByteBuffer containing the data to parse
      */
     private void parseData(ByteBuffer data) {
+
+        this.length = ((data.get() << 8) &data.get()) & 0xffff;
         switch(this.type) {
             case A:
                 this.resourceData = ParserUtility.parseAData(data);
