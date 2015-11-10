@@ -28,8 +28,8 @@ public class ParserUtility {
         while (currentLength != 0) {
             if (((currentLength >> 15) & 0x1) == 1 && (((currentLength >> 14) & 0x1)
                     == 1)) {
-                int newPosition = ((currentLength << 8) & 0x3F | data.get() &
-                        0xFF);
+                int newPosition = (((currentLength << 8) & 0x3F) | (data.get() &
+                        0xFF));
                 int oldPos = data.position();
                 data.position(newPosition);
                 name = parseName(name, data);
@@ -52,18 +52,9 @@ public class ParserUtility {
      */
     private static String nameParseLength(String name, ByteBuffer data,int
             currentLength) {
-        boolean firstTime = true;
         byte[] bytes = new byte[currentLength];
         for (int i = 0; i < currentLength; i++) {
-            byte dataReceived = data.get();
-            if(dataReceived >= 33) {
-                bytes[i] = dataReceived;
-            } else {
-                if(!firstTime) {
-                    bytes[i] = 46;
-                }
-            }
-            firstTime = false;
+            bytes[i] = data.get();
         }
         name = name + new String(bytes) + ".";
         return name;

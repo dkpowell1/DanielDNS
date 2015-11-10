@@ -39,6 +39,7 @@ public class DNSLookup {
         this.messageType = messageType;
         this.dnsIP = InetAddress.getByName(dnsIP);
         this.datagramSocket = new DatagramSocket(5053);
+        this.datagramSocket.setSoTimeout(500);
     }
 
     /**
@@ -50,14 +51,15 @@ public class DNSLookup {
         DatagramPacket datagramPacket = new DatagramPacket(message
                     .getByteBuffer().array(),message
                     .getByteBuffer().array().length, dnsIP,53);
-        try {
-            this.datagramSocket.send(datagramPacket);
-            this.datagramSocket.receive(datagramPacket);
-            Message response = new Message(ByteBuffer.wrap(datagramPacket
-                    .getData()));
-            System.out.println(response.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            try {
+                this.datagramSocket.send(datagramPacket);
+                this.datagramSocket.receive(datagramPacket);
+                Message response = new Message(ByteBuffer.wrap(datagramPacket
+                        .getData()));
+                System.out.println(response.toString());
+            } catch (IOException e) {
+
+            }
+
     }
 }

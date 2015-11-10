@@ -86,8 +86,8 @@ public class ResourceRecord {
      * @param data  the ByteBuffer containing the data to parse
      */
     private void parseTTL(ByteBuffer data) {
-        this.ttl = ((data.get() << 31) | (data.get() << 23) | (data.get() << 15)
-                | (data.get() << 7)) & 0xffffffff;
+        this.ttl = ((data.get() << 24) & 0xFF) | ((data.get() << 16)&0xFF) | ((data.get()<< 8)&0xFF)
+                | (data.get() & 0xFF);
     }
 
     /**
@@ -96,7 +96,6 @@ public class ResourceRecord {
      * @param data the ByteBuffer containing the data to parse
      */
     private void parseData(ByteBuffer data) {
-
         this.length = ((data.get() << 8) &data.get()) & 0xffff;
         switch(this.type) {
             case A:
