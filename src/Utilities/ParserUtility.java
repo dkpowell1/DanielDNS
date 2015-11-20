@@ -6,7 +6,6 @@ import Message.Type;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 /**
  * This class holds my utility methods for parsing bytes
@@ -24,19 +23,18 @@ public class ParserUtility {
      * @param data the ByteBuffer to pull the bytes from
      */
     public static String parseName(String name, ByteBuffer data) {
-        int currentLength = data.get();
-        while (currentLength != 0) {
-            if (((currentLength >> 15) & 0x1) == 1 && (((currentLength >> 14) & 0x1)
-                    == 1)) {
-                int newPosition = (((currentLength << 8) & 0x3F) | (data.get() &
-                        0xFF));
+        byte currentLength = data.get();
+        //>>> adds 0's before the numbers shifted
+       while (currentLength != 0) {
+            if ((currentLength & 0b11000000) == 0b11000000) {
+                int newPosition = ((((currentLength) & 0x3F) << 8) | (data.get() & 0xFF));
                 int oldPos = data.position();
                 data.position(newPosition);
                 name = parseName(name, data);
                 data.position(oldPos);
                 currentLength = 0;
             } else {
-                name = nameParseLength(name, data,currentLength);
+                name = nameParseLength(name, data, currentLength & 0xFF);
                 currentLength = data.get();
             }
         }
