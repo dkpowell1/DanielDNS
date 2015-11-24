@@ -93,7 +93,8 @@ public class Header {
      * @param totalAdditionalResourceRecords the total number of additional resource records in the message
      */
     public Header(boolean qR, int opCode, boolean aA, boolean truncated, boolean recursionDesired, boolean recursionAvailable, int z, int returnCode, int totalQuestions, int totalAnswerResourceRecords, int totalAuthorityResourceRecords, int totalAdditionalResourceRecords) {
-        //65536 is the highest 16 bit value for the id, so I randomly generate a number between 0 and 65536
+        //65536 is the highest 16 bit value for the id, so I randomly generate a number between 0
+        // and 65536
         Random r = new Random();
         this.id = r.nextInt(65536);
         this.qR = qR;

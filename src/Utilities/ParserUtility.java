@@ -31,10 +31,12 @@ public class ParserUtility {
                 int newPosition = ((((currentLength) & 0x3F) << 8) | (data.get() & 0xFF));
                 int oldPos = data.position();
                 data.position(newPosition);
+                //This is a recursive call since the DNS Protocol wanted pointers inside pointers.
                 name = parseName(name, data);
                 data.position(oldPos);
                 currentLength = 0;
             } else {
+                //Finally a normal Name
                 name = nameParseLength(name, data, currentLength & 0xFF);
                 currentLength = data.get();
             }

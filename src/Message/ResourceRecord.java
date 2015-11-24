@@ -96,6 +96,7 @@ public class ResourceRecord {
      * @param data the ByteBuffer containing the data to parse
      */
     private void parseData(ByteBuffer data) {
+        //This is never used because everything is recursive with the pointers and stuff
         int temp = ((data.get() << 8) &data.get()) & 0xffff;
         this.length = temp;
         switch(this.type) {
