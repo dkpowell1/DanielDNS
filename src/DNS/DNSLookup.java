@@ -47,7 +47,7 @@ public class DNSLookup {
      * Parses and prints the response to the user
      */
     public void queryDNS() {
-        Message message = new Message(hostname,messageType,false);
+        Message message = new Message(hostname,messageType,true);
         DatagramPacket datagramPacket = new DatagramPacket(message
                     .getByteBuffer().array(),message
                     .getByteBuffer().array().length, dnsIP,53);

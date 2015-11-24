@@ -26,6 +26,7 @@ public class ParserUtility {
         byte currentLength = data.get();
         //>>> adds 0's before the numbers shifted
        while (currentLength != 0) {
+           //Java is killing me slowly with all the signed things being everywhere
             if ((currentLength & 0b11000000) == 0b11000000) {
                 int newPosition = ((((currentLength) & 0x3F) << 8) | (data.get() & 0xFF));
                 int oldPos = data.position();
